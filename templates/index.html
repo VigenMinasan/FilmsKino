@@ -11,32 +11,51 @@
       background: #121212;
       color: #fff;
       font-family: Arial;
-      overflow: hidden;
     }
 
     body {
       display: flex;
       flex-direction: column;
       height: 100vh;
+      overflow: hidden;
     }
 
+    /* Шапка */
     .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
       padding: 12px 16px;
-      text-align: center;
-      font-size: 18px;
-      font-weight: bold;
       border-bottom: 1px solid #2a2a2a;
+      flex-shrink: 0;
     }
-    .header span { color: #4caf50; }
 
+    .title { font-size: 18px; font-weight: bold; }
+    .title span { color: #4caf50; }
+
+    .search-btn {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: #2a2a2a;
+      border: 1px solid #444;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      text-decoration: none;
+      color: #fff;
+    }
+
+    /* Зона свайпа */
     .swipe-area {
       flex: 1;
       display: flex;
       align-items: center;
       justify-content: center;
-      position: relative;
       overflow: hidden;
       padding: 16px;
+      min-height: 0;
     }
 
     .card {
@@ -59,13 +78,10 @@
       object-fit: cover;
       display: block;
       pointer-events: none;
+      background: #333;
     }
 
-    .card-info {
-      padding: 12px;
-      pointer-events: none;
-    }
-
+    .card-info { padding: 12px; pointer-events: none; }
     .card-info h2 { font-size: 18px; margin-bottom: 4px; }
     .card-info p { font-size: 13px; color: #bbb; margin-bottom: 4px; }
     .card-info .rating { color: #ffc107; font-weight: bold; }
@@ -96,12 +112,14 @@
       transform: rotate(20deg);
     }
 
+    /* Нижнее меню */
     .bottom-nav {
       display: flex;
       justify-content: space-around;
       padding: 10px 0;
       border-top: 1px solid #2a2a2a;
       background: #1a1a1a;
+      flex-shrink: 0;
     }
 
     .nav-item {
@@ -114,42 +132,14 @@
 
     .nav-item .icon { font-size: 20px; display: block; }
     .nav-item.active { color: #4caf50; }
-    .header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 12px 16px;
-  border-bottom: 1px solid #2a2a2a;
-}
-
-.title {
-  font-size: 18px;
-  font-weight: bold;
-}
-
-.title span { color: #4caf50; }
-
-.search-btn {
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
-  background: #2a2a2a;
-  border: 1px solid #444;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 18px;
-  text-decoration: none;
-  color: #fff;
-}
   </style>
 </head>
 <body>
 
   <div class="header">
-  <div class="title">🎬 Кино<span>Тиндер</span></div>
-  <a href="/search" class="search-btn">🔍</a>
-</div>
+    <div class="title">🎬 Кино<span>Тиндер</span></div>
+    <a href="/search" class="search-btn">🔍</a>
+  </div>
 
   <div class="swipe-area">
     {% if film %}
@@ -160,7 +150,9 @@
            data-release_date="{{ film.release_date }}"
            data-vote_average="{{ film.vote_average }}">
         {% if film.poster_path %}
-          <img src="https://image.tmdb.org/t/p/w500{{ film.poster_path }}">
+          <img src="https://image.tmdb.org/t/p/w500{{ film.poster_path }}" alt="{{ film.title }}">
+        {% else %}
+          <div style="height: 300px; display: flex; align-items: center; justify-content: center; color: #666; font-size: 48px;">🎬</div>
         {% endif %}
         <div class="card-info">
           <h2>{{ film.title }}</h2>
@@ -219,7 +211,6 @@
         card.style.transition = 'transform 0.3s ease';
 
         if (currentX > 100) {
-          // ЛАЙК
           card.style.transform = 'translateX(500px) rotate(30deg)';
 
           const id = card.dataset.id;
@@ -234,12 +225,10 @@
           }, 300);
 
         } else if (currentX < -100) {
-          // ДИЗЛАЙК
           card.style.transform = 'translateX(-500px) rotate(-30deg)';
           setTimeout(() => window.location.href = '/', 300);
 
         } else {
-          // Возврат
           card.style.transform = 'translateX(0) rotate(0)';
           document.getElementById('stampLike').style.opacity = 0;
           document.getElementById('stampNope').style.opacity = 0;
