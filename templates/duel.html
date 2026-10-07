@@ -1,29 +1,87 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Дуэли</title>
-  <style>
-    body {
-      background: #121212;
-      color: #fff;
-      font-family: Arial;
-      padding: 20px;
-      text-align: center;
-    }
-    a { text-decoration: none; }
-    button {
-      padding: 10px 20px;
-      font-size: 16px;
-      cursor: pointer;
-    }
-  </style>
-</head>
-<body>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Дуэли — КиноТиндер</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
 
-  <h1>⚔️ Дуэли</h1>
-  <p>Скоро здесь будут дуэли фильмов.</p>
-  <a href="/"><button>← Назад</button></a>
+  html, body {
+    background: #050505;
+    color: #fff;
+    font-family: 'Georgia', serif;
+    min-height: 100%;
+  }
 
-</body>
-</html>
+  .bg {
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 15% 20%, rgba(201, 164, 90, 0.25) 0%, transparent 45%),
+      radial-gradient(ellipse at 85% 80%, rgba(80, 90, 120, 0.2) 0%, transparent 45%),
+      #050505;
+    z-index: 0;
+  }
+
+  .app {
+    position: relative;
+    z-index: 1;
+    min-height: 100dvh;
+    padding: 20px;
+    max-width: 420px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 0 24px;
+  }
+
+  .logo {
+    font-size: 22px;
+    font-weight: bold;
+    letter-spacing: 1.5px;
+    background: linear-gradient(180deg, #f5e5b8 0%, #e8c987 25%, #c9a45a 50%, #a67c3a 75%, #d4b070 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    filter: drop-shadow(0 0 8px rgba(232, 201, 135, 0.3));
+  }
+
+  .logo .star {
+    -webkit-text-fill-color: #f5e5b8;
+    color: #f5e5b8;
+    font-size: 16px;
+    text-shadow: 0 0 10px rgba(245, 229, 184, 0.9);
+  }
+
+  .back-btn {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, #2a2218 0%, #1a1410 60%, #0d0a07 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    color: #e8c987;
+    font-size: 20px;
+    border: 1px solid rgba(201, 164, 90, 0.4);
+    box-shadow: 0 0 15px rgba(201, 164, 90, 0.2);
+  }
+
+  .content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    padding-bottom: 40px;
+  }
+
+  .icon-b
