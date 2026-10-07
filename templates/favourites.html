@@ -1,61 +1,191 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Избранное</title>
-  <style>
-    body {
-      background: #121212;
-      color: #fff;
-      font-family: Arial;
-      padding: 16px;
-    }
-    h1 { text-align: center; }
-    a { color: #4caf50; text-decoration: none; }
-    button {
-      padding: 8px 16px;
-      font-size: 14px;
-      cursor: pointer;
-      margin: 4px;
-    }
-    .movie {
-      background: #1e1e1e;
-      padding: 10px;
-      border-radius: 10px;
-      margin-bottom: 10px;
-      display: flex;
-      gap: 10px;
-    }
-    .movie img { width: 80px; border-radius: 6px; }
-    .movie h2 { font-size: 16px; margin-bottom: 4px; }
-    .movie p { font-size: 13px; color: #bbb; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Избранное — КиноТиндер</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    background: #050505;
+    color: #fff;
+    font-family: 'Georgia', serif;
+    min-height: 100%;
+  }
+
+  .bg {
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 15% 20%, rgba(201, 164, 90, 0.25) 0%, transparent 45%),
+      radial-gradient(ellipse at 85% 80%, rgba(80, 90, 120, 0.2) 0%, transparent 45%),
+      #050505;
+    z-index: 0;
+  }
+
+  .app {
+    position: relative;
+    z-index: 1;
+    min-height: 100dvh;
+    padding: 20px;
+    max-width: 420px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 0 24px;
+  }
+
+  .logo {
+    font-size: 22px;
+    font-weight: bold;
+    letter-spacing: 1.5px;
+    background: linear-gradient(180deg, #f5e5b8 0%, #e8c987 25%, #c9a45a 50%, #a67c3a 75%, #d4b070 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    filter: drop-shadow(0 0 8px rgba(232, 201, 135, 0.3));
+  }
+
+  .logo .star {
+    -webkit-text-fill-color: #f5e5b8;
+    color: #f5e5b8;
+    font-size: 16px;
+    text-shadow: 0 0 10px rgba(245, 229, 184, 0.9);
+  }
+
+  .back-btn {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, #2a2218 0%, #1a1410 60%, #0d0a07 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    color: #e8c987;
+    font-size: 20px;
+    border: 1px solid rgba(201, 164, 90, 0.4);
+    box-shadow: 0 0 15px rgba(201, 164, 90, 0.2);
+  }
+
+  .clear-btn {
+    padding: 10px 18px;
+    border-radius: 30px;
+    background: transparent;
+    border: 1px solid rgba(255, 82, 82, 0.5);
+    color: #ff5252;
+    font-size: 12px;
+    font-family: Arial;
+    text-decoration: none;
+    letter-spacing: 0.5px;
+  }
+
+  .content { flex: 1; padding-bottom: 20px; }
+
+  .movie {
+    display: flex;
+    gap: 12px;
+    background: linear-gradient(180deg, #141414 0%, #0d0d0d 100%);
+    border-radius: 14px;
+    padding: 10px;
+    margin-bottom: 12px;
+    border: 1px solid rgba(201, 164, 90, 0.25);
+    box-shadow: 0 0 15px rgba(201, 164, 90, 0.08);
+  }
+
+  .movie img {
+    width: 80px;
+    border-radius: 10px;
+    flex-shrink: 0;
+  }
+
+  .movie-info { flex: 1; min-width: 0; }
+
+  .movie-info h2 {
+    font-size: 16px;
+    color: #f5e5b8;
+    margin-bottom: 4px;
+    font-family: 'Georgia', serif;
+    letter-spacing: 0.5px;
+  }
+
+  .movie-info p {
+    font-size: 12px;
+    color: #999;
+    font-family: Arial;
+    margin-bottom: 4px;
+  }
+
+  .movie-info .rating {
+    color: #f5e5b8;
+    font-weight: bold;
+    font-family: Arial;
+    font-size: 13px;
+    text-shadow: 0 0 8px rgba(245, 229, 184, 0.4);
+  }
+
+  .empty {
+    text-align: center;
+    color: #666;
+    padding: 60px 20px;
+    font-family: Arial;
+  }
+
+  .empty .big {
+    font-size: 60px;
+    display: block;
+    margin-bottom: 16px;
+    opacity: 0.4;
+  }
+</style>
 </head>
 <body>
 
-  <h1>❤️ Избранное</h1>
+  <div class="bg"></div>
 
-  <div style="text-align: center; margin-bottom: 16px;">
-    <a href="/"><button>← Домой</button></a>
-    <a href="/clear"><button>🗑 Очистить</button></a>
-  </div>
+  <div class="app">
+    <div class="header">
+      <a href="/" class="back-btn">←</a>
+      <div class="logo">Избранное<span class="star">✦</span></div>
+      {% if favourites %}
+        <a href="/clear" class="clear-btn">Очистить</a>
+      {% else %}
+        <div style="width: 42px;"></div>
+      {% endif %}
+    </div>
 
-  {% if favourites %}
-    {% for f in favourites %}
-      <div class="movie">
-        {% if f.poster_path %}
-          <img src="https://image.tmdb.org/t/p/w200{{ f.poster_path }}">
-        {% endif %}
-        <div>
-          <h2>{{ f.title }}</h2>
-          <p>{{ f.release_date }}</p>
-          <p>⭐ {{ f.vote_average }}</p>
+    <div class="content">
+      {% if favourites %}
+        {% for f in favourites %}
+          <div class="movie">
+            {% if f.poster_path %}
+              <img src="https://image.tmdb.org/t/p/w200{{ f.poster_path }}" alt="{{ f.title }}">
+            {% endif %}
+            <div class="movie-info">
+              <h2>{{ f.title }}</h2>
+              <p>{{ f.release_date }}</p>
+              <p class="rating">★ {{ f.vote_average }}</p>
+            </div>
+          </div>
+        {% endfor %}
+      {% else %}
+        <div class="empty">
+          <span class="big">🤍</span>
+          <p>Пока ничего нет</p>
+          <p style="margin-top: 8px; font-size: 12px; color: #444;">
+            Свайпай вправо, чтобы добавить фильм
+          </p>
         </div>
-      </div>
-    {% endfor %}
-  {% else %}
-    <p style="text-align: center;">Пока ничего нет</p>
-  {% endif %}
+      {% endif %}
+    </div>
+  </div>
 
 </body>
 </html>
