@@ -1,187 +1,391 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>Кино-Тиндер</title>
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>КиноТиндер</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
 
-    html, body {
-      background: #121212;
-      color: #fff;
-      font-family: Arial;
-      height: 100%;
-      overflow: hidden;
-    }
+  html, body {
+    background: #050505;
+    color: #fff;
+    font-family: 'Georgia', serif;
+    height: 100%;
+    overflow: hidden;
+  }
 
-    body {
-      display: flex;
-      flex-direction: column;
-    }
+  .bg {
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 15% 20%, rgba(201, 164, 90, 0.25) 0%, transparent 45%),
+      radial-gradient(ellipse at 85% 80%, rgba(80, 90, 120, 0.2) 0%, transparent 45%),
+      #050505;
+    z-index: 0;
+  }
 
-    /* Шапка */
-    .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 12px 16px;
-      border-bottom: 1px solid #2a2a2a;
-      flex-shrink: 0;
-    }
+  .app {
+    position: relative;
+    z-index: 1;
+    height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    max-width: 420px;
+    margin: 0 auto;
+  }
 
-    .title { font-size: 18px; font-weight: bold; }
-    .title span { color: #4caf50; }
+  /* ШАПКА */
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 0 24px;
+    flex-shrink: 0;
+  }
 
-    .search-btn {
-      width: 42px;
-      height: 42px;
-      border-radius: 50%;
-      background: #2a2a2a;
-      border: 1px solid #444;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 18px;
-      text-decoration: none;
-      color: #fff;
-    }
+  .logo {
+    font-family: 'Georgia', serif;
+    font-size: 28px;
+    font-weight: bold;
+    letter-spacing: 1.5px;
+    background: linear-gradient(180deg, #f5e5b8 0%, #e8c987 25%, #c9a45a 50%, #a67c3a 75%, #d4b070 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    filter: drop-shadow(0 0 8px rgba(232, 201, 135, 0.3));
+  }
 
-    /* Зона свайпа */
-    .swipe-area {
-      flex: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-      padding: 16px;
-      padding-bottom: 80px; /* место под фиксированное меню */
-      min-height: 0;
-    }
+  .logo .star {
+    -webkit-text-fill-color: #f5e5b8;
+    color: #f5e5b8;
+    font-size: 20px;
+    text-shadow: 0 0 10px rgba(245, 229, 184, 0.9), 0 0 20px rgba(245, 229, 184, 0.5);
+  }
 
-    .card {
-      width: 100%;
-      max-width: 340px;
-      background: #1e1e1e;
-      border-radius: 16px;
-      overflow: hidden;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
-      transition: transform 0.2s ease;
-      user-select: none;
-      touch-action: none;
-      cursor: grab;
-      position: relative;
-    }
+  .search-btn {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, #2a2218 0%, #1a1410 60%, #0d0a07 100%);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    color: #e8c987;
+    text-decoration: none;
+    font-family: Arial;
+    box-shadow:
+      inset 0 0 12px rgba(232, 201, 135, 0.15),
+      0 0 20px rgba(232, 201, 135, 0.25),
+      0 4px 12px rgba(0, 0, 0, 0.6);
+  }
 
-    .card img {
-      width: 100%;
-      height: 300px;
-      object-fit: cover;
-      display: block;
-      pointer-events: none;
-      background: #333;
-    }
+  .search-btn::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    padding: 1.5px;
+    background: linear-gradient(135deg, #f5e5b8 0%, #c9a45a 30%, #6b5028 50%, #c9a45a 70%, #f5e5b8 100%);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
 
-    .card-info { padding: 12px; pointer-events: none; }
-    .card-info h2 { font-size: 18px; margin-bottom: 4px; }
-    .card-info p { font-size: 13px; color: #bbb; margin-bottom: 4px; }
-    .card-info .rating { color: #ffc107; font-weight: bold; }
+  .search-btn .icon {
+    font-size: 18px;
+    margin-bottom: 2px;
+    filter: drop-shadow(0 0 4px rgba(232, 201, 135, 0.6));
+  }
 
-    .stamp {
-      position: absolute;
-      top: 40px;
-      font-size: 26px;
-      font-weight: bold;
-      padding: 6px 14px;
-      border: 3px solid;
-      border-radius: 10px;
-      opacity: 0;
-      pointer-events: none;
-    }
+  /* ЗОНА СВАЙПА */
+  .swipe-area {
+    flex: 1;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    margin-bottom: 20px;
+    min-height: 0;
+  }
 
-    .stamp.like {
-      left: 20px;
-      color: #4caf50;
-      border-color: #4caf50;
-      transform: rotate(-20deg);
-    }
+  .side-preview {
+    position: absolute;
+    width: 36px;
+    height: 72%;
+    background: linear-gradient(180deg, #1a1a1a, #0d0d0d);
+    border-radius: 14px;
+    opacity: 0.55;
+    filter: blur(3px);
+    border: 1px solid rgba(201, 164, 90, 0.15);
+  }
+  .side-preview.left { left: -10px; }
+  .side-preview.right { right: -10px; }
 
-    .stamp.nope {
-      right: 20px;
-      color: #ff5252;
-      border-color: #ff5252;
-      transform: rotate(20deg);
-    }
+  .card {
+    position: relative;
+    width: 100%;
+    max-width: 320px;
+    height: 100%;
+    max-height: 480px;
+    border-radius: 22px;
+    overflow: hidden;
+    background: #000;
+    border: 1px solid rgba(201, 164, 90, 0.5);
+    box-shadow:
+      0 0 0 1px rgba(245, 229, 184, 0.15),
+      0 0 25px rgba(201, 164, 90, 0.35),
+      0 0 60px rgba(201, 164, 90, 0.15),
+      0 25px 70px rgba(0, 0, 0, 0.9);
+    transition: transform 0.2s ease;
+    user-select: none;
+    touch-action: none;
+    cursor: grab;
+  }
 
-    /* Нижнее меню — прибито к низу */
-    .bottom-nav {
-      display: flex;
-      justify-content: space-around;
-      padding: 10px 0;
-      border-top: 1px solid #2a2a2a;
-      background: #1a1a1a;
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      z-index: 100;
-    }
+  .card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 22px;
+    padding: 1px;
+    background: linear-gradient(135deg, rgba(245, 229, 184, 0.7) 0%, rgba(201, 164, 90, 0.2) 30%, transparent 50%, rgba(201, 164, 90, 0.2) 70%, rgba(245, 229, 184, 0.7) 100%);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+    z-index: 3;
+  }
 
-    .nav-item {
-      flex: 1;
-      text-align: center;
-      font-size: 12px;
-      color: #888;
-      text-decoration: none;
-    }
+  .card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    pointer-events: none;
+  }
 
-    .nav-item .icon { font-size: 20px; display: block; }
-    .nav-item.active { color: #4caf50; }
-  </style>
+  .card::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 60%;
+    background: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.5) 40%, rgba(0, 0, 0, 0.85) 75%, rgba(0, 0, 0, 0.98) 100%);
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .card-info {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 2;
+    padding: 28px 20px;
+    text-align: center;
+    pointer-events: none;
+  }
+
+  .card-title {
+    font-family: 'Georgia', serif;
+    font-size: 22px;
+    font-weight: bold;
+    letter-spacing: 3px;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    color: #f5e5b8;
+    text-shadow: 0 0 12px rgba(245, 229, 184, 0.35), 0 0 24px rgba(201, 164, 90, 0.2), 0 2px 8px rgba(0, 0, 0, 0.9);
+  }
+
+  .card-year {
+    font-size: 13px;
+    color: #999;
+    margin-bottom: 8px;
+    font-family: Arial;
+    letter-spacing: 1px;
+  }
+
+  .card-rating {
+    font-size: 16px;
+    color: #f5e5b8;
+    font-family: Arial;
+    font-weight: bold;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    text-shadow: 0 0 10px rgba(245, 229, 184, 0.5);
+  }
+
+  .card-rating .star {
+    font-size: 18px;
+    color: #f5e5b8;
+    filter: drop-shadow(0 0 6px rgba(245, 229, 184, 0.9));
+  }
+
+  /* ШТАМПЫ */
+  .stamp {
+    position: absolute;
+    top: 40px;
+    font-size: 26px;
+    font-weight: bold;
+    padding: 6px 14px;
+    border: 3px solid;
+    border-radius: 10px;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 4;
+    font-family: Arial;
+    letter-spacing: 2px;
+  }
+
+  .stamp.like {
+    left: 20px;
+    color: #4caf50;
+    border-color: #4caf50;
+    transform: rotate(-20deg);
+    text-shadow: 0 0 12px rgba(76, 175, 80, 0.8);
+    box-shadow: 0 0 20px rgba(76, 175, 80, 0.5);
+  }
+
+  .stamp.nope {
+    right: 20px;
+    color: #ff5252;
+    border-color: #ff5252;
+    transform: rotate(20deg);
+    text-shadow: 0 0 12px rgba(255, 82, 82, 0.8);
+    box-shadow: 0 0 20px rgba(255, 82, 82, 0.5);
+  }
+
+  /* МЕНЮ */
+  .bottom-nav {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 16px 8px 14px;
+    background: linear-gradient(180deg, #141414 0%, #0d0d0d 100%);
+    border-radius: 32px;
+    border: 1px solid rgba(201, 164, 90, 0.2);
+    box-shadow:
+      inset 0 1px 0 rgba(245, 229, 184, 0.08),
+      0 0 20px rgba(201, 164, 90, 0.1),
+      0 6px 20px rgba(0, 0, 0, 0.6);
+    flex-shrink: 0;
+  }
+
+  .nav-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    color: #666;
+    font-size: 11px;
+    font-family: Arial;
+    padding: 8px 0;
+    transition: color 0.2s;
+    position: relative;
+    letter-spacing: 0.5px;
+  }
+
+  .nav-item .icon {
+    font-size: 22px;
+    margin-bottom: 5px;
+  }
+
+  .nav-item:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    right: 0;
+    top: 20%;
+    height: 60%;
+    width: 1px;
+    background: linear-gradient(to bottom, transparent, rgba(201, 164, 90, 0.25), transparent);
+  }
+
+  .nav-item.active {
+    color: #f5e5b8;
+  }
+
+  .nav-item.active .icon {
+    filter: drop-shadow(0 0 10px rgba(245, 229, 184, 0.8));
+  }
+
+  .nav-item.active::before {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 25%;
+    right: 25%;
+    height: 2px;
+    background: linear-gradient(to right, transparent, #f5e5b8, transparent);
+    border-radius: 2px;
+    box-shadow: 0 0 10px rgba(245, 229, 184, 0.8);
+  }
+</style>
 </head>
 <body>
 
-  <div class="header">
-    <div class="title">🎬 Кино<span>Тиндер</span></div>
-    <a href="/search" class="search-btn">🔍</a>
-  </div>
+  <div class="bg"></div>
 
-  <div class="swipe-area">
-    {% if film %}
-      <div class="card" id="card"
-           data-id="{{ film.id }}"
-           data-title="{{ film.title }}"
-           data-poster_path="{{ film.poster_path }}"
-           data-release_date="{{ film.release_date }}"
-           data-vote_average="{{ film.vote_average }}">
-        {% if film.poster_path %}
-          <img src="https://image.tmdb.org/t/p/w500{{ film.poster_path }}" alt="{{ film.title }}">
-        {% else %}
-          <div style="height: 300px; display: flex; align-items: center; justify-content: center; color: #666; font-size: 48px;">🎬</div>
-        {% endif %}
-        <div class="card-info">
-          <h2>{{ film.title }}</h2>
-          <p>{{ film.release_date }}</p>
-          <p class="rating">⭐ {{ film.vote_average }}</p>
+  <div class="app">
+    <div class="header">
+      <div class="logo">КиноТиндер<span class="star">✦</span></div>
+      <a href="/search" class="search-btn">
+        <span class="icon">🔍</span>
+        Поиск
+      </a>
+    </div>
+
+    <div class="swipe-area">
+      <div class="side-preview left"></div>
+      <div class="side-preview right"></div>
+
+      {% if film %}
+        <div class="card" id="card"
+             data-id="{{ film.id }}"
+             data-title="{{ film.title }}"
+             data-poster_path="{{ film.poster_path }}"
+             data-release_date="{{ film.release_date }}"
+             data-vote_average="{{ film.vote_average }}">
+          {% if film.poster_path %}
+            <img src="https://image.tmdb.org/t/p/w500{{ film.poster_path }}" alt="{{ film.title }}">
+          {% endif %}
+          <div class="card-info">
+            <div class="card-title">{{ film.title }}</div>
+            <div class="card-year">{{ film.release_date }}</div>
+            <div class="card-rating"><span class="star">★</span> {{ film.vote_average }}</div>
+          </div>
+
+          <div class="stamp like" id="stampLike">❤️ ЛАЙК</div>
+          <div class="stamp nope" id="stampNope">👎 НЕТ</div>
         </div>
+      {% else %}
+        <p>Фильмы не найдены</p>
+      {% endif %}
+    </div>
 
-        <div class="stamp like" id="stampLike">❤️ ЛАЙК</div>
-        <div class="stamp nope" id="stampNope">👎 НЕТ</div>
-      </div>
-    {% else %}
-      <p>Фильмы не найдены</p>
-    {% endif %}
-  </div>
-
-  <div class="bottom-nav">
-    <a href="/" class="nav-item active">
-      <span class="icon">🏠</span>Домой
-    </a>
-    <a href="/duel" class="nav-item">
-      <span class="icon">⚔️</span>Дуэли
-    </a>
-    <a href="/favourites" class="nav-item">
-      <span class="icon">❤️</span>Избранное
-    </a>
+    <div class="bottom-nav">
+      <a href="/" class="nav-item active">
+        <span class="icon">🏠</span>
+        Домой
+      </a>
+      <a href="/duel" class="nav-item">
+        <span class="icon">⚔️</span>
+        Дуэли
+      </a>
+      <a href="/favourites" class="nav-item">
+        <span class="icon">❤️</span>
+        Избранное
+      </a>
+    </div>
   </div>
 
   <script>
@@ -200,9 +404,7 @@
         if (!isDragging) return;
         currentX = e.clientX - startX;
         const rotation = currentX / 20;
-
         card.style.transform = `translateX(${currentX}px) rotate(${rotation}deg)`;
-
         document.getElementById('stampLike').style.opacity =
           currentX > 30 ? Math.min(currentX / 100, 1) : 0;
         document.getElementById('stampNope').style.opacity =
@@ -216,28 +418,23 @@
 
         if (currentX > 100) {
           card.style.transform = 'translateX(500px) rotate(30deg)';
-
           const id = card.dataset.id;
           const title = card.dataset.title;
           const poster = card.dataset.poster_path;
           const date = card.dataset.release_date;
           const rating = card.dataset.vote_average;
-
           setTimeout(() => {
             window.location.href =
               `/like?id=${id}&title=${encodeURIComponent(title)}&poster_path=${poster}&release_date=${date}&vote_average=${rating}`;
           }, 300);
-
         } else if (currentX < -100) {
           card.style.transform = 'translateX(-500px) rotate(-30deg)';
           setTimeout(() => window.location.href = '/', 300);
-
         } else {
           card.style.transform = 'translateX(0) rotate(0)';
           document.getElementById('stampLike').style.opacity = 0;
           document.getElementById('stampNope').style.opacity = 0;
         }
-
         currentX = 0;
       });
     }
